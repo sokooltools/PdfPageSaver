@@ -99,8 +99,6 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitattributes" />
-    <Content Include=".gitignore" />
     <Content Include="app.ico" />
     <Content Include="Externals\PdfSharp.dll" />
     <Content Include="Externals\PdfSharp.pdb" />
