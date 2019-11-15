@@ -52,6 +52,13 @@ echo ===========================================================================
 
 echo.
 
+net session >nul 2>&1
+if errorlevel 1 (
+	echo WARNING!!! This step could not be performed since 'Admin' permissions are required.
+	echo ^(You need to restart Visual Studio as an administrator...^)
+	GOTO:EOF
+)
+
 if %Configuration% EQU Debug (
 	CALL:DO_DEBUG_SPECIFIC_TASKS
 ) else (
@@ -70,17 +77,11 @@ GOTO:EOF
 :DO_DEBUG_SPECIFIC_TASKS
 
 echo ======================================================================================
-echo = Copy the target files to the "%%PROGRAMFILES(X86)%%\DevTools\.." folder. 
+echo = Copy the target files to the "%%ProgramFiles(X86)%%\SokoolTools\.." folder. 
 echo ======================================================================================
 echo.
-net session >nul 2>&1
-if errorlevel 1 (
-	echo WARNING!!! This step could not be performed since 'Admin' permissions are required.
-	echo ^(You need to restart Visual Studio as an administrator...^)
-	GOTO:EOF
-)
-set src="%TargetPath%.*"
-set dst="%PROGRAMFILES(X86)%\DevTools\%ProjectName%\*"
+set src="%TargetDir%*.*"
+set dst="%ProgramFiles(x86)%\SokoolTools\%ProjectName%\*"
 echo  Copying %src%
 echo       to %dst%
 echo    (Note: only new or modified files are copied.)
@@ -92,7 +93,9 @@ GOTO:EOF
 :: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 :DO_RELEASE_SPECIFIC_TASKS
 echo.
-echo -- No 'Release' specific tasks required. --
+CALL:DO_DEBUG_SPECIFIC_TASKS
+del %dst%.pdb
+del %dst%.xml
 GOTO:EOF
 
 :: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
