@@ -2,7 +2,7 @@
 
 if "%5" NEQ "" (goto:SKIP)
 
-title DevTools: Post-Build
+title SokoolTools: Post-Build
 
 @echo ===============================================================================================================
 @echo = (c) 2012-2019 SokoolTools.
@@ -70,7 +70,7 @@ GOTO:EOF
 :DO_DEBUG_SPECIFIC_TASKS
 
 echo ======================================================================================
-echo = Copy the target files to the "%%PROGRAMFILES(X86)%%\DevTools\.." folder. 
+echo = Copy the target files to the "%%PROGRAMFILES(X86)%%\SokoolTools\.." folder. 
 echo ======================================================================================
 echo.
 net session >nul 2>&1
@@ -80,7 +80,7 @@ if errorlevel 1 (
 	GOTO:EOF
 )
 set src="%TargetPath%.*"
-set dst="%PROGRAMFILES(X86)%\DevTools\%ProjectName%\*"
+set dst="%PROGRAMFILES(X86)%\SokoolTools\%ProjectName%\*"
 echo  Copying %src%
 echo       to %dst%
 echo    (Note: only new or modified files are copied.)
