@@ -86,6 +86,16 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="PDFsamples\Chapter1_Example1.pdf" />
+    <None Include="PDFsamples\Chapter1_Example2.pdf" />
+    <None Include="PDFsamples\Chapter1_Example3.pdf" />
+    <None Include="PDFsamples\Chapter1_Example4.pdf" />
+    <None Include="PDFsamples\Chapter1_Example5.pdf" />
+    <None Include="PDFsamples\Chapter1_Example5_Un-Watermarked.pdf" />
+    <None Include="PDFsamples\Chapter1_Example5_Watermarked.pdf" />
+    <None Include="PDFsamples\Chapter1_Example6.pdf" />
+    <None Include="PDFsamples\Chapter1_Example7.pdf" />
+    <None Include="PDFsamples\Chapter1_Example8.pdf" />
     <None Include="PostBuild.bat" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -103,6 +113,14 @@
     <Content Include="Externals\PdfSharp.dll" />
     <Content Include="Externals\PdfSharp.pdb" />
     <Content Include="Externals\PdfSharp.xml" />
+    <Content Include="Help\help.htm" />
+    <Content Include="Help\images\Chrysanthemum.jpg" />
+    <Content Include="Help\images\Jellyfish.jpg" />
+    <Content Include="Help\images\Koala.jpg" />
+    <Content Include="Help\images\Lighthouse.jpg" />
+    <Content Include="Help\scripts\help.js" />
+    <Content Include="Help\scripts\jquery.js" />
+    <Content Include="Help\themes\help.css" />
     <Content Include="Images\image1.png" />
     <Content Include="Images\image2.png" />
     <Content Include="Images\image3.png" />
