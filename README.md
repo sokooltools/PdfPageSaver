@@ -5,6 +5,8 @@ many PDF files at a time replacing the original file with the selected page numb
 a new PDF file having the same name as the original PDF file, but with a specified suffix 
 appended to its original name.
 
+Make sure to consult [Help](help/Help.htm)
+
 This shows the typical window displayed when the application is first launched:
 
 ![Image1](Images/image1.png)
