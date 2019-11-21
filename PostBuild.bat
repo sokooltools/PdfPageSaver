@@ -2,7 +2,7 @@
 
 if "%5" NEQ "" (goto:SKIP)
 
-title DevTools: Post-Build
+title SokoolTools: Post-Build
 
 @echo ===============================================================================================================
 @echo = (c) 2012-2019 SokoolTools.
