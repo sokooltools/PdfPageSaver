@@ -3,13 +3,13 @@ using System.Runtime.InteropServices;
 
 namespace PdfPageSaver
 {
-	public static class FileProperties
+	internal static class FileProperties
 	{
 		[DllImport("shell32.dll", CharSet = CharSet.Auto)]
 		static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		public struct SHELLEXECUTEINFO
+		private struct SHELLEXECUTEINFO
 		{
 			public int cbSize;
 			public uint fMask;
