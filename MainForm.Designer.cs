@@ -67,6 +67,8 @@
 			this.lblCaption = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.txtPageNumbers = new PdfPageSaver.TextBoxEx();
+			this.btnBrowseFiles = new System.Windows.Forms.Button();
+			this.browseFilesDialog = new System.Windows.Forms.OpenFileDialog();
 			this.groupBox1.SuspendLayout();
 			this.ctxMenu1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -91,7 +93,7 @@
 			this.rdoAddSuffix.Checked = true;
 			this.rdoAddSuffix.Location = new System.Drawing.Point(9, 44);
 			this.rdoAddSuffix.Name = "rdoAddSuffix";
-			this.rdoAddSuffix.Size = new System.Drawing.Size(110, 19);
+			this.rdoAddSuffix.Size = new System.Drawing.Size(111, 19);
 			this.rdoAddSuffix.TabIndex = 0;
 			this.rdoAddSuffix.TabStop = true;
 			this.rdoAddSuffix.Text = "New with Suffix:";
@@ -116,7 +118,7 @@
 			// 
 			this.txtSuffix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.txtSuffix.Location = new System.Drawing.Point(119, 42);
+			this.txtSuffix.Location = new System.Drawing.Point(120, 42);
 			this.txtSuffix.Name = "txtSuffix";
 			this.txtSuffix.Size = new System.Drawing.Size(43, 23);
 			this.txtSuffix.TabIndex = 1;
@@ -134,7 +136,7 @@
 			this.toolTip1.SetToolTip(this.btnExit, "Exits this application after saving or resetting the settings depending on whethe" +
         "r the \'Save Settings\' is checkmarked.");
 			this.btnExit.UseVisualStyleBackColor = true;
-			this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+			this.btnExit.Click += new System.EventHandler(this.BtnExit_Click);
 			// 
 			// btnRemoveAll
 			// 
@@ -148,7 +150,7 @@
 			this.toolTip1.SetToolTip(this.btnRemoveAll, "Removes all the file paths from the list of pdf files. \r\n(Right click on a file t" +
         "o see more choices...)");
 			this.btnRemoveAll.UseVisualStyleBackColor = true;
-			this.btnRemoveAll.Click += new System.EventHandler(this.btnRemoveAll_Click);
+			this.btnRemoveAll.Click += new System.EventHandler(this.BtnRemoveAll_Click);
 			// 
 			// btnSave
 			// 
@@ -163,7 +165,7 @@
         "using the same directory and file name, but with the \r\nspecified suffix appended" +
         " to the end of each file name.");
 			this.btnSave.UseVisualStyleBackColor = true;
-			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+			this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
 			// 
 			// lblPdfFiles
 			// 
@@ -221,16 +223,16 @@
 			this.listBox1.ItemHeight = 15;
 			this.listBox1.Location = new System.Drawing.Point(17, 88);
 			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(542, 34);
+			this.listBox1.Size = new System.Drawing.Size(503, 34);
 			this.listBox1.Sorted = true;
 			this.listBox1.TabIndex = 3;
 			this.toolTip1.SetToolTip(this.listBox1, "Contains the list of PDF files to save with just the specified pages.");
-			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-			this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
-			this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.listBox1_DragEnter);
-			this.listBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listBox1_KeyUp);
-			this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
-			this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
+			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
+			this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListBox1_DragDrop);
+			this.listBox1.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListBox1_DragEnter);
+			this.listBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ListBox1_KeyUp);
+			this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBox1_MouseDoubleClick);
+			this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ListBox1_MouseDown);
 			// 
 			// ctxMenu1
 			// 
@@ -247,14 +249,14 @@
             this.ctxMenuProperties});
 			this.ctxMenu1.Name = "contextMenuStrip1";
 			this.ctxMenu1.Size = new System.Drawing.Size(203, 176);
-			this.ctxMenu1.Opening += new System.ComponentModel.CancelEventHandler(this.ctxMenu1_Opening);
+			this.ctxMenu1.Opening += new System.ComponentModel.CancelEventHandler(this.CtxMenu1_Opening);
 			// 
 			// ctxMenuOpen
 			// 
 			this.ctxMenuOpen.Name = "ctxMenuOpen";
 			this.ctxMenuOpen.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuOpen.Text = "Open";
-			this.ctxMenuOpen.Click += new System.EventHandler(this.ctxMenuOpen_Click);
+			this.ctxMenuOpen.Click += new System.EventHandler(this.CtxMenuOpen_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -266,14 +268,14 @@
 			this.ctxMenuSave.Name = "ctxMenuSave";
 			this.ctxMenuSave.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuSave.Text = "Save";
-			this.ctxMenuSave.Click += new System.EventHandler(this.ctxMenuSave_Click);
+			this.ctxMenuSave.Click += new System.EventHandler(this.CtxMenuSave_Click);
 			// 
 			// ctxMenuSaveSelected
 			// 
 			this.ctxMenuSaveSelected.Name = "ctxMenuSaveSelected";
 			this.ctxMenuSaveSelected.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuSaveSelected.Text = "Save Selected";
-			this.ctxMenuSaveSelected.Click += new System.EventHandler(this.ctxMenuSaveSelected_Click);
+			this.ctxMenuSaveSelected.Click += new System.EventHandler(this.CtxMenuSaveSelected_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -285,21 +287,21 @@
 			this.ctxMenuRemove.Name = "ctxMenuRemove";
 			this.ctxMenuRemove.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuRemove.Text = "Remove";
-			this.ctxMenuRemove.Click += new System.EventHandler(this.ctxMenuRemove_Click);
+			this.ctxMenuRemove.Click += new System.EventHandler(this.CtxMenuRemove_Click);
 			// 
 			// ctxMenuRemoveAll
 			// 
 			this.ctxMenuRemoveAll.Name = "ctxMenuRemoveAll";
 			this.ctxMenuRemoveAll.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuRemoveAll.Text = "Remove All";
-			this.ctxMenuRemoveAll.Click += new System.EventHandler(this.ctxMenuRemoveAll_Click);
+			this.ctxMenuRemoveAll.Click += new System.EventHandler(this.CtxMenuRemoveAll_Click);
 			// 
 			// ctxMenuRemoveAllButSelected
 			// 
 			this.ctxMenuRemoveAllButSelected.Name = "ctxMenuRemoveAllButSelected";
 			this.ctxMenuRemoveAllButSelected.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuRemoveAllButSelected.Text = "Remove All But Selected";
-			this.ctxMenuRemoveAllButSelected.Click += new System.EventHandler(this.ctxMenuRemoveAllButSelected_Click);
+			this.ctxMenuRemoveAllButSelected.Click += new System.EventHandler(this.CtxMenuRemoveAllButSelected_Click);
 			// 
 			// toolStripSeparator3
 			// 
@@ -311,7 +313,7 @@
 			this.ctxMenuProperties.Name = "ctxMenuProperties";
 			this.ctxMenuProperties.Size = new System.Drawing.Size(202, 22);
 			this.ctxMenuProperties.Text = "Properties...";
-			this.ctxMenuProperties.Click += new System.EventHandler(this.ctxMenuProperties_Click);
+			this.ctxMenuProperties.Click += new System.EventHandler(this.CtxMenuProperties_Click);
 			// 
 			// lblNumPages
 			// 
@@ -323,7 +325,7 @@
 			this.lblNumPages.TabIndex = 4;
 			this.lblNumPages.Text = "Current number of pages: 0";
 			this.toolTip1.SetToolTip(this.lblNumPages, "Indicates the current number of pages of the selected pdf file.");
-			this.lblNumPages.Move += new System.EventHandler(this.lblNumPages_Move);
+			this.lblNumPages.Move += new System.EventHandler(this.LblNumPages_Move);
 			// 
 			// chkSaveSettings
 			// 
@@ -374,13 +376,32 @@
 			this.txtPageNumbers.TabIndex = 6;
 			this.txtPageNumbers.Text = "1,3";
 			// 
+			// btnBrowseFiles
+			// 
+			this.btnBrowseFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnBrowseFiles.Location = new System.Drawing.Point(527, 88);
+			this.btnBrowseFiles.Name = "btnBrowseFiles";
+			this.btnBrowseFiles.Size = new System.Drawing.Size(29, 23);
+			this.btnBrowseFiles.TabIndex = 14;
+			this.btnBrowseFiles.Text = "...";
+			this.btnBrowseFiles.UseVisualStyleBackColor = true;
+			this.btnBrowseFiles.Click += new System.EventHandler(this.BtnBrowseFiles_Click);
+			// 
+			// browseFilesDialog
+			// 
+			this.browseFilesDialog.DefaultExt = "pdf";
+			this.browseFilesDialog.Multiselect = true;
+			this.browseFilesDialog.Title = "Select PDF file(s):";
+			// 
 			// MainForm
 			// 
 			this.AcceptButton = this.btnSave;
+			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnExit;
 			this.ClientSize = new System.Drawing.Size(575, 330);
+			this.Controls.Add(this.btnBrowseFiles);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.lblCaption);
 			this.Controls.Add(this.lblNumPages);
@@ -390,7 +411,7 @@
 			this.Controls.Add(this.btnExit);
 			this.Controls.Add(this.btnRemoveAll);
 			this.Controls.Add(this.btnSave);
-			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -439,6 +460,8 @@
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripMenuItem ctxMenuProperties;
+		private System.Windows.Forms.Button btnBrowseFiles;
+		private System.Windows.Forms.OpenFileDialog browseFilesDialog;
 	}
 }
 

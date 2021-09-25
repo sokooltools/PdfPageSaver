@@ -30,10 +30,10 @@ namespace PdfPageSaver
 			if (m.Msg == WM_PASTE)
 			{
 				string orgText = Clipboard.GetText();
-				string newText = orgText.Where(c => _validChars.Contains(c)).Aggregate(string.Empty, (current, c) => current + c);
+				string newText = orgText.Where(c => _validChars.Contains(c)).Aggregate(String.Empty, (current, c) => current + c);
 				if (newText != orgText)
 				{
-					if (string.IsNullOrEmpty(newText))
+					if (String.IsNullOrEmpty(newText))
 						return;
 					Clipboard.SetText(newText.Trim());
 					base.WndProc(ref m);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,39 +14,40 @@ using PdfSharp.Pdf.IO;
 
 namespace PdfPageSaver
 {
-	//--------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// The main form used by this application.
 	/// </summary>
 	/// <seealso cref="System.Windows.Forms.Form" />
-	//--------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------------------------------
 	public partial class MainForm : Form
 	{
-		//.............................................................................................................
+		//..................................................................................................................................
 
 		#region Public Constructor
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MainForm"/> class.
 		/// </summary>
 		/// <param name="args">The arguments.</param>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		public MainForm(object[] args)
 		{
 			InitializeComponent();
+			System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 			if (args.Length > 0)
 				listBox1.Items.AddRange(args);
 
-			lblFileSize.Text = string.Empty;
-			lblNumPages.Text = string.Empty;
+			lblFileSize.Text = String.Empty;
+			lblNumPages.Text = String.Empty;
 
 			ctxMenuOpen.Font = new Font(ctxMenuOpen.Font, ctxMenuOpen.Font.Style | FontStyle.Bold);
 		}
 
 		#endregion
 
-		//.............................................................................................................
+		//..................................................................................................................................
 
 		#region Private Form Event Handlers
 
@@ -64,11 +66,11 @@ namespace PdfPageSaver
 			rdoOverwrite.Checked = Settings.Default.IsOverwrite;
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Handles the event raised when this form is closing.
 		/// </summary>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			Settings.Default.SaveSettings = chkSaveSettings.Checked;
@@ -83,12 +85,13 @@ namespace PdfPageSaver
 			Settings.Default.Save();
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Handles the event raised by the listBox1 control when the user drags files on top of it.
+		/// Note: that this does not work while in debug!!!!
 		/// </summary>
-		//----------------------------------------------------------------------------------------------------
-		private void listBox1_DragEnter(object sender, DragEventArgs e)
+		//------------------------------------------------------------------------------------------------------------------------
+		private void ListBox1_DragEnter(object sender, DragEventArgs e)
 		{
 			// Make sure they're actually dropping files (not text or anything else)
 			if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
@@ -98,41 +101,46 @@ namespace PdfPageSaver
 
 		private bool _skipSelectedIndex;
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Handles the event raised by the listBox1 control when the user drops files onto it.
 		/// </summary>
-		//----------------------------------------------------------------------------------------------------
-		private void listBox1_DragDrop(object sender, DragEventArgs e)
+		//------------------------------------------------------------------------------------------------------------------------
+		private void ListBox1_DragDrop(object sender, DragEventArgs e)
 		{
 			// Transfer the filenames to a string array
-			var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			AddFilesToListbox(files);
+		}
 
+		private void AddFilesToListbox(IReadOnlyList<string> files)
+		{
 			// Loop through the string array, adding each filename to the ListBox.
 			_skipSelectedIndex = true;
-			for (int i = 0; i < files.Length; i++)
+			for (int i = 0; i < files.Count; i++)
 			{
 				string file = files[i];
 
-				if (string.Compare(Path.GetExtension(file), ".pdf", StringComparison.InvariantCultureIgnoreCase) != 0)
+				if (String.Compare(Path.GetExtension(file), ".pdf", StringComparison.InvariantCultureIgnoreCase) != 0)
 					continue;
 				if (!listBox1.Items.Contains(file))
 					listBox1.Items.Add(file);
-				if (i != files.Length - 1)
+				if (i != files.Count - 1)
 					continue;
 				_skipSelectedIndex = false;
+				listBox1.Refresh();
 				listBox1.SelectedItem = file;
 			}
 			_skipSelectedIndex = false;
 		}
 
-		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+		private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (!_skipSelectedIndex)
 				UpdateForm();
 		}
 
-		private void listBox1_MouseDown(object sender, MouseEventArgs e)
+		private void ListBox1_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (e.Button != MouseButtons.Right)
 				return;
@@ -141,7 +149,7 @@ namespace PdfPageSaver
 				listBox1.SelectedIndex = indexOfItem;
 		}
 
-		private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+		private void ListBox1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			int indexOfItem = listBox1.IndexFromPoint(e.X, e.Y);
 			if (indexOfItem == ListBox.NoMatches)
@@ -150,7 +158,7 @@ namespace PdfPageSaver
 			OpenPdf();
 		}
 
-		private void listBox1_KeyUp(object sender, KeyEventArgs e)
+		private void ListBox1_KeyUp(object sender, KeyEventArgs e)
 		{
 			switch (e.KeyCode)
 			{
@@ -163,44 +171,44 @@ namespace PdfPageSaver
 			}
 		}
 
-		private void ctxMenu1_Opening(object sender, CancelEventArgs e)
+		private void CtxMenu1_Opening(object sender, CancelEventArgs e)
 		{
 			ctxMenuRemove.Enabled = ctxMenuOpen.Enabled = ctxMenuSaveSelected.Enabled = ctxMenuProperties.Enabled = listBox1.SelectedIndex >= 0;
 			ctxMenuRemoveAll.Enabled = ctxMenuSave.Enabled = listBox1.Items.Count > 0;
 			ctxMenuRemoveAllButSelected.Enabled = listBox1.Items.Count > 1;
 		}
 
-		private void ctxMenuOpen_Click(object sender, EventArgs e)
+		private void CtxMenuOpen_Click(object sender, EventArgs e)
 		{
 			OpenPdf();
 		}
 
-		private void ctxMenuRemove_Click(object sender, EventArgs e)
+		private void CtxMenuRemove_Click(object sender, EventArgs e)
 		{
 			RemovePdf();
 		}
 
-		private void ctxMenuSave_Click(object sender, EventArgs e)
+		private void CtxMenuSave_Click(object sender, EventArgs e)
 		{
 			SavePdfs();
 		}
 
-		private void ctxMenuSaveSelected_Click(object sender, EventArgs e)
+		private void CtxMenuSaveSelected_Click(object sender, EventArgs e)
 		{
 			SavePdfs(true);
 		}
 
-		private void ctxMenuRemoveAll_Click(object sender, EventArgs e)
+		private void CtxMenuRemoveAll_Click(object sender, EventArgs e)
 		{
 			RemoveAllPdfs();
 		}
 
-		private void ctxMenuRemoveAllButSelected_Click(object sender, EventArgs e)
+		private void CtxMenuRemoveAllButSelected_Click(object sender, EventArgs e)
 		{
 			RemoveAllButSelectedPdfs();
 		}
 
-		private void ctxMenuProperties_Click(object sender, EventArgs e)
+		private void CtxMenuProperties_Click(object sender, EventArgs e)
 		{
 			if (listBox1.SelectedIndex == -1)
 				return;
@@ -208,45 +216,79 @@ namespace PdfPageSaver
 			FileProperties.Show(filename);
 		}
 
-		private void btnRemoveAll_Click(object sender, EventArgs e)
+		private void BtnRemoveAll_Click(object sender, EventArgs e)
 		{
 			RemoveAllPdfs();
 		}
 
-		private void btnSave_Click(object sender, EventArgs e)
+		private void BtnBrowseFiles_Click(object sender, EventArgs e)
+		{
+			using var dlg = new OpenFileDialog();
+			dlg.Multiselect = true;
+			dlg.AddExtension = true;
+			if (dlg.ShowDialog(this) == DialogResult.OK)
+			{
+				AddFilesToListbox(dlg.FileNames);
+			}
+		}
+
+		private void BtnSave_Click(object sender, EventArgs e)
 		{
 			SavePdfs();
 		}
 
-		private void btnExit_Click(object sender, EventArgs e)
+		private void BtnExit_Click(object sender, EventArgs e)
 		{
 			Close();
 		}
 
-		private void lblNumPages_Move(object sender, EventArgs e)
+		private void LblNumPages_Move(object sender, EventArgs e)
 		{
 			lblNumPages.Top = listBox1.Bottom + 3;
 		}
 
 		#endregion
 
-		//.............................................................................................................
+		//..................................................................................................................................
 
 		#region Private Helper Methods
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Opens the PDF file.
+		/// Opens the PDF file selected in the list.
 		/// </summary>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private void OpenPdf()
 		{
 			if (listBox1.SelectedIndex == -1)
 				return;
 			string filename = listBox1.Items[listBox1.SelectedIndex].ToString();
-			Process.Start(filename);
+			if (filename == null)
+				return;
+			try
+			{
+				Process p = new()
+				{
+					StartInfo = new ProcessStartInfo
+					{
+						FileName = filename,
+						CreateNoWindow = false,
+						UseShellExecute = true
+					}
+				};
+				p.Start();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(this, ex.Message, @"PDF Page Saver", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 		}
 
+		//------------------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Removes the selected PDF file from the list.
+		/// </summary>
+		//------------------------------------------------------------------------------------------------------------------------
 		private void RemovePdf()
 		{
 			int idx = listBox1.SelectedIndex;
@@ -259,6 +301,11 @@ namespace PdfPageSaver
 			listBox1.SelectedIndex = idx;
 		}
 
+		//------------------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Removes all the PDFS from the list.
+		/// </summary>
+		//------------------------------------------------------------------------------------------------------------------------
 		private void RemoveAllPdfs()
 		{
 			listBox1.SelectedIndex = -1;
@@ -266,6 +313,11 @@ namespace PdfPageSaver
 			UpdateForm();
 		}
 
+		//------------------------------------------------------------------------------------------------------------------------
+		/// <summary>
+		/// Removes all but the selected PDFs from the list.
+		/// </summary>
+		//------------------------------------------------------------------------------------------------------------------------
 		private void RemoveAllButSelectedPdfs()
 		{
 			object tmp = listBox1.SelectedItem;
@@ -275,9 +327,9 @@ namespace PdfPageSaver
 			UpdateForm();
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Saves the PDFS.
+		/// Saves the PDFs according to the current specifications on the form.
 		/// </summary>
 		/// <param name="isSelectedOnly">if set to <c>true</c> only the selected PDF file will be saved.</param>
 		/// <exception cref="InvalidOperationException">
@@ -285,7 +337,7 @@ namespace PdfPageSaver
 		/// or
 		/// The PDF file was not saved because it would contain no pages.
 		/// </exception>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private void SavePdfs(bool isSelectedOnly = false)
 		{
 			string pageNumbers = txtPageNumbers.Text;
@@ -298,8 +350,8 @@ namespace PdfPageSaver
 			if (!rdoAddSuffix.Checked)
 			{
 				if (MessageBox.Show(this,
-					    $@"Sure you want to overwrite the {(isSelectedOnly ? "selected PDF file" : $"{(listBox1.Items.Count > 1 ? $"{listBox1.Items.Count} PDF files" : "PDF file")}")}?", Text,
-					    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+						$@"Sure you want to overwrite the {(isSelectedOnly ? "selected PDF file" : $"{(listBox1.Items.Count > 1 ? $"{listBox1.Items.Count} PDF files" : "PDF file")}")}?", Text,
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
 					return;
 			}
 			Cursor = Cursors.WaitCursor;
@@ -328,11 +380,13 @@ namespace PdfPageSaver
 						invalidFileCnt++;
 					}
 				}
-				if (invalidFileCnt > 1)
-					throw new InvalidOperationException($"{invalidFileCnt} PDF files were not saved because they wouldn't have any pages.");
-				if (invalidFileCnt > 0)
-					throw new InvalidOperationException("The PDF file was not saved because it wouldn't have any pages.");
-
+				switch (invalidFileCnt)
+				{
+					case > 1:
+						throw new InvalidOperationException($"{invalidFileCnt} PDF files were not saved because they wouldn't have any pages.");
+					case > 0:
+						throw new InvalidOperationException("The PDF file was not saved because it wouldn't have any pages.");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -347,13 +401,15 @@ namespace PdfPageSaver
 		private void UpdateForm()
 		{
 			btnSave.Enabled = btnRemoveAll.Enabled = listBox1.Items.Count > 0;
-			lblFileSize.Text = string.Empty;
-			lblNumPages.Text = string.Empty;
+			lblFileSize.Text = String.Empty;
+			lblNumPages.Text = String.Empty;
 
 			if (listBox1.SelectedIndex == -1)
 				return;
 
 			string filename = listBox1.Items[listBox1.SelectedIndex].ToString();
+			if (String.IsNullOrEmpty(filename))
+				return;
 
 			// Directories crash the program :|
 			if ((new FileInfo(filename).Attributes & FileAttributes.Directory) == FileAttributes.Directory)
@@ -365,12 +421,11 @@ namespace PdfPageSaver
 			// Set the label
 			try
 			{
-				using (PdfDocument doc = PdfReader.Open(filename, PdfDocumentOpenMode.InformationOnly))
-				{
-					lblNumPages.Text = $@"Current number of pages: {doc.PageCount}";
-					lblFileSize.Text = $@"Current file size: {GetFileSizeInfo(doc.FileSize)}";
-					lblFileSize.Left = listBox1.Right - lblFileSize.Width;
-				}
+				//PdfReader.unethicalreading = true;
+				using PdfDocument doc = PdfReader.Open(filename, PdfDocumentOpenMode.InformationOnly);
+				lblNumPages.Text = $@"Current number of pages: {doc.PageCount}";
+				lblFileSize.Text = $@"Current file size: {GetFileSizeInfo(doc.FileSize)}";
+				lblFileSize.Left = listBox1.Right - lblFileSize.Width;
 			}
 			catch (Exception ex)
 			{
@@ -379,12 +434,10 @@ namespace PdfPageSaver
 			}
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Saves the specified pdf file to contain just the specified page numbers. By default, a new pdf 
-		/// file is created using
-		/// the same file name as the existing file, but with the specified suffix appended to it. Optionally 
-		/// the existing file
+		/// Saves the specified pdf file to contain just the specified page numbers. By default, a new pdf file is created using
+		/// the same file name as the existing file, but with the specified suffix appended to it. Optionally the existing file
 		/// can just be overwritten when the last argument is set to true.
 		/// </summary>
 		/// <param name="inputFilename">The input filename.</param>
@@ -392,7 +445,7 @@ namespace PdfPageSaver
 		/// <param name="suffix">The suffix.</param>
 		/// <param name="isOverwriteExisting">if set to <c>true</c> the original file is overwritten.</param>
 		/// <exception cref="InvalidOperationException"></exception>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private static void SavePdfPages(string inputFilename, string pageNumbers, string suffix, bool isOverwriteExisting = false)
 		{
 			// Process numeric range.
@@ -405,7 +458,7 @@ namespace PdfPageSaver
 			if (filename == null)
 				return;
 
-			string outputFilename = $"{Path.Combine(Path.GetDirectoryName(inputFilename) ?? string.Empty, filename)}{suffix}.pdf";
+			string outputFilename = $"{Path.Combine(Path.GetDirectoryName(inputFilename) ?? String.Empty, filename)}{suffix}.pdf";
 
 			if (File.Exists(outputFilename))
 			{
@@ -416,59 +469,61 @@ namespace PdfPageSaver
 			}
 
 			// Open the file
-			using (PdfDocument inputDocument = PdfReader.Open(inputFilename, PdfDocumentOpenMode.Import))
+			using PdfDocument inputDocument = PdfReader.Open(inputFilename, PdfDocumentOpenMode.Import);
+			// Create a new pdf document in memory using parts of the original document.
+			var outputDocument = new PdfDocument
 			{
-				// Create a new pdf document in memory using parts of the original document.
-				var outputDocument = new PdfDocument
+				Info =
 				{
-					Info =
-					{
-						Author = inputDocument.Info.Author,
-						Keywords = inputDocument.Info.Keywords,
-						Subject = inputDocument.Info.Subject,
-						Title = inputDocument.Info.Title,
-						Creator = inputDocument.Info.Creator
-					},
-					Options =
-					{
-						NoCompression = inputDocument.Options.NoCompression,
-						CompressContentStreams = inputDocument.Options.CompressContentStreams
-					},
-					PageLayout = inputDocument.PageLayout,
-					//PageMode = inputDocument.PageMode,
-					Version = inputDocument.Version,
-					ViewerPreferences =
-					{
-						CenterWindow = inputDocument.ViewerPreferences.CenterWindow,
-						DisplayDocTitle = inputDocument.ViewerPreferences.DisplayDocTitle,
-						FitWindow = inputDocument.ViewerPreferences.FitWindow,
-						HideMenubar = inputDocument.ViewerPreferences.HideMenubar,
-						HideToolbar = inputDocument.ViewerPreferences.HideToolbar
-					}
-				};
-
-				// Add the specified pages to the new pdf document.
-				for (int idx = 0; idx < inputDocument.PageCount; idx++)
+					Author = inputDocument.Info.Author,
+					Creator = inputDocument.Info.Creator,
+					Keywords = inputDocument.Info.Keywords,
+					Subject = inputDocument.Info.Subject,
+					Title = inputDocument.Info.Title
+				},
+				Options =
 				{
-					if ((idx + 1).ToString().In(pageNumArray))
-						outputDocument.AddPage(inputDocument.Pages[idx]);
+					NoCompression = inputDocument.Options.NoCompression,
+					CompressContentStreams = inputDocument.Options.CompressContentStreams
+				},
+				PageLayout = inputDocument.PageLayout,
+				//PageMode = inputDocument.PageMode,
+				Version = inputDocument.Version,
+				ViewerPreferences =
+				{
+					CenterWindow = inputDocument.ViewerPreferences.CenterWindow,
+					DisplayDocTitle = inputDocument.ViewerPreferences.DisplayDocTitle,
+					FitWindow = inputDocument.ViewerPreferences.FitWindow,
+					HideMenubar = inputDocument.ViewerPreferences.HideMenubar,
+					HideToolbar = inputDocument.ViewerPreferences.HideToolbar
 				}
+			};
 
-				if (outputDocument.PageCount == 0)
-					throw new InvalidOperationException($@"""{Path.GetFileName(outputFilename)}"" was not saved because it would have zero pages.");
-
-				// Save the document to disk.
-				outputDocument.Save(outputFilename);
+			// Add the pages specified by the user to the new pdf document.
+			for (int idx = 0; idx < inputDocument.PageCount; idx++)
+			{
+				if ((idx + 1).ToString().In(pageNumArray))
+					outputDocument.AddPage(inputDocument.Pages[idx]);
 			}
+
+			if (outputDocument.PageCount == 0)
+				throw new InvalidOperationException($@"""{Path.GetFileName(outputFilename)}"" was not saved because it would have zero pages.");
+
+			// Save the document to disk.
+			outputDocument.Save(outputFilename);
+
+			// Set the file creation and modification dates the same as the original.
+			File.SetCreationTimeUtc(outputFilename, inputDocument.Info.CreationDate);
+			File.SetLastWriteTimeUtc(outputFilename, inputDocument.Info.ModificationDate);
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Returns a page number array by parsing the specified pageNumbers string.
 		/// </summary>
 		/// <param name="pageNumbers">The page numbers.</param>
 		/// <returns></returns>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private static string[] GetPageNumberArray(string pageNumbers)
 		{
 			pageNumbers = pageNumbers.Trim(' ', ',', ';', '-');
@@ -478,9 +533,9 @@ namespace PdfPageSaver
 				for (int index = mc.Count - 1; index >= 0; index--)
 				{
 					Match m = mc[index];
-					string newPageNumbers = string.Empty;
-					int beg = int.Parse(m.Groups[1].Value);
-					int end = int.Parse(m.Groups[2].Value);
+					string newPageNumbers = String.Empty;
+					int beg = Int32.Parse(m.Groups[1].Value);
+					int end = Int32.Parse(m.Groups[2].Value);
 					for (int i = beg; i <= end; i++)
 						newPageNumbers += i + ",";
 					pageNumbers = pageNumbers.Substring(0, m.Index) + newPageNumbers + pageNumbers.Substring(m.Index + m.Length);
@@ -492,13 +547,13 @@ namespace PdfPageSaver
 			return pageNumArray;
 		}
 
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Gets the file size information.
 		/// </summary>
 		/// <param name="len">The length of the file.</param>
 		/// <returns></returns>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		private static string GetFileSizeInfo(double len)
 		{
 			double origLen = len;
@@ -541,23 +596,22 @@ namespace PdfPageSaver
 		}
 
 		#endregion
-
 	}
 
-	//.............................................................................................................
+	//..................................................................................................................................
 
 	#region Public Extension Class
 
 	public static class MyExtensions
 	{
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Returns an indication as to whether this object exists in the specified enumerable collection.
 		/// </summary>
 		/// <param name="obj">What to look for in the collection.</param>
 		/// <param name="col">Collection to iterate over.</param>
 		/// <returns>True if this object exists in the specified collection; otherwise false.</returns>
-		//----------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------------
 		public static bool In(this object obj, IEnumerable col)
 		{
 			return col.Cast<object>().Contains(obj);
