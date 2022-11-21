@@ -71,9 +71,6 @@ Note: page numbers which are not in the original document will be ignored.</valu
   <data name="lblCaption.Text" xml:space="preserve">
     <value>This mini-application is used for extracting the specified pages from each pdf file and overwriting the original pdf with the changes or optionally saving the extracted pages of the original pdf to a new file of the same name and path but with the specified suffix appended to the end of the file name.</value>
   </data>
-  <metadata name="browseFilesDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>219, 17</value>
-  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
