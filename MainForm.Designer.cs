@@ -68,7 +68,6 @@
 			this.lblCaption = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.txtPageNumbers = new PdfPageSaver.TextBoxEx();
-			this.browseFilesDialog = new System.Windows.Forms.OpenFileDialog();
 			this.groupBox1.SuspendLayout();
 			this.ctxMenu1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -389,12 +388,6 @@
 			this.txtPageNumbers.Size = new System.Drawing.Size(252, 23);
 			this.txtPageNumbers.TabIndex = 6;
 			this.txtPageNumbers.Text = "1,3";
-			// 
-			// browseFilesDialog
-			// 
-			this.browseFilesDialog.DefaultExt = "pdf";
-			this.browseFilesDialog.Multiselect = true;
-			this.browseFilesDialog.Title = "Select PDF file(s):";
 			// 
 			// MainForm
 			// 
