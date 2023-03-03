@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SokoolTools")]
 [assembly: AssemblyProduct("PdfPageSaver")]
-[assembly: AssemblyCopyright("Copyright © SokoolTools 2009-2019")]
+[assembly: AssemblyCopyright("Copyright © SokoolTools 2009-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
