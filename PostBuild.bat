@@ -5,7 +5,7 @@ if "%5" NEQ "" (goto:SKIP)
 title SokoolTools: Post-Build
 
 @echo ===============================================================================================================
-@echo = (c) 2012-2019 SokoolTools.
+@echo = (c) 2012-2021 SokoolTools.
 @echo =
 @echo = This batch file is used for post-build configuration and should be called directly from the Visual Studio 
 @echo = project's [Post-Build] event command-line using the following syntax:
@@ -94,8 +94,8 @@ GOTO:EOF
 :DO_RELEASE_SPECIFIC_TASKS
 echo.
 CALL:DO_DEBUG_SPECIFIC_TASKS
-del %dst%.pdb
-del %dst%.xml
+if exist %dst%.pdb del/q %dst%.pdb
+if exist %dst%.xml del/q %dst%.xml
 GOTO:EOF
 
 :: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

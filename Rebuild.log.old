@@ -1,0 +1,50 @@
+Build started 1/19/2020 5:21:06 PM.
+__________________________________________________
+Project "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\PdfPageSaver.sln" (default targets):
+
+Target ValidateSolutionConfiguration:
+    Building solution configuration "Release|Any CPU".
+Target Build:
+    __________________________________________________
+    Project "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\PdfPageSaver.sln" is building "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\PdfPageSaver.csproj" (default targets):
+
+    Target CoreResGen:
+        No resources are out of date with respect to their source files. Skipping resource generation.
+    Target GenerateTargetFrameworkMonikerAttribute:
+      Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+    Target CoreCompile:
+      Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+    Target _CopyFilesMarkedCopyLocal:
+        Touching "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\obj\Release\PdfPageSaver.csproj.CopyComplete".
+    Target _CopyAppConfigFile:
+      Skipping target "_CopyAppConfigFile" because all output files are up-to-date with respect to the input files.
+    Target CopyFilesToOutputDirectory:
+        PdfPageSaver -> D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\bin\PdfPageSaver.exe
+    Target PostBuildEvent:
+        "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\Postbuild.bat" "Release" "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\" "PdfPageSaver" "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\bin\" "PdfPageSaver"
+        
+        
+        +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        BEGIN [PdfPageSaver] Post-Build
+        - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        
+        ======================================================================================
+        = List of local variables.
+        ======================================================================================
+        Configuration =	Release
+        SolutionDir   =	D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\
+        ProjectDir    =	D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\
+        ProjectName   =	PdfPageSaver
+        TargetDir     =	D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\bin\
+        TargetName    =	PdfPageSaver
+        TargetPath    =	D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\bin\PdfPageSaver
+        ======================================================================================
+        
+        WARNING!!! This step could not be performed since 'Admin' permissions are required.
+        (You need to restart Visual Studio as an administrator...)
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.51
