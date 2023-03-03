@@ -332,7 +332,7 @@
 			// 
 			this.chkSaveSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.chkSaveSettings.AutoSize = true;
-			this.chkSaveSettings.Location = new System.Drawing.Point(446, 86);
+			this.chkSaveSettings.Location = new System.Drawing.Point(442, 15);
 			this.chkSaveSettings.Name = "chkSaveSettings";
 			this.chkSaveSettings.Size = new System.Drawing.Size(95, 19);
 			this.chkSaveSettings.TabIndex = 12;

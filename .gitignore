@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/PdfPageSaver.csproj.old
+/Rebuild.cmd.lnk
+/Rebuild.log.old
