@@ -108,7 +108,7 @@ namespace PdfPageSaver
 		//------------------------------------------------------------------------------------------------------------------------
 		private void ListBox1_DragDrop(object sender, DragEventArgs e)
 		{
-			// Transfer the filenames to a string array
+			// Transfer the file names to a string array
 			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 			AddFilesToListbox(files);
 		}
@@ -513,8 +513,8 @@ namespace PdfPageSaver
 			outputDocument.Save(outputFilename);
 
 			// Set the file creation and modification dates the same as the original.
-			File.SetCreationTimeUtc(outputFilename, inputDocument.Info.CreationDate);
-			File.SetLastWriteTimeUtc(outputFilename, inputDocument.Info.ModificationDate);
+			File.SetCreationTimeUtc(outputFilename, File.GetCreationTimeUtc(inputFilename));
+			File.SetLastWriteTimeUtc(outputFilename, File.GetLastWriteTimeUtc(inputFilename));
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
