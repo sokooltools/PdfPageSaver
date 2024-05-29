@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using PdfPageSaver.Properties;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace PdfPageSaver
 {
@@ -538,7 +539,7 @@ namespace PdfPageSaver
 					int end = Int32.Parse(m.Groups[2].Value);
 					for (int i = beg; i <= end; i++)
 						newPageNumbers += i + ",";
-					pageNumbers = pageNumbers.Substring(0, m.Index) + newPageNumbers + pageNumbers[(m.Index + m.Length)..];
+					pageNumbers = pageNumbers[..m.Index] + newPageNumbers + pageNumbers[(m.Index + m.Length)..];
 				}
 			}
 			string[] pageNumArray = null;

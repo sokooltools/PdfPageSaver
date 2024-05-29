@@ -15,6 +15,7 @@ namespace PdfPageSaver
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			// ReSharper disable once CoVariantArrayConversion
 			Application.Run(new MainForm(args));
 		}
 	}

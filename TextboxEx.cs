@@ -18,10 +18,13 @@ namespace PdfPageSaver
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			if (!(e.Control || e.Alt))
-				if (!e.Shift && !_validKeyValues.Contains(e.KeyValue))
-					e.SuppressKeyPress = true;
-				else if (e.Shift && !_validShiftKeyValues.Contains(e.KeyValue))
-					e.SuppressKeyPress = true;
+				switch (e.Shift)
+				{
+					case false when !_validKeyValues.Contains(e.KeyValue):
+					case true when !_validShiftKeyValues.Contains(e.KeyValue):
+						e.SuppressKeyPress = true;
+						break;
+				}
 			base.OnKeyDown(e);
 		}
 
