@@ -1,16 +1,17 @@
-﻿using System;
+﻿using PdfPageSaver.Properties;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using PdfPageSaver.Properties;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 
 namespace PdfPageSaver
@@ -37,7 +38,7 @@ namespace PdfPageSaver
 		{
 			InitializeComponent();
 			System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-			if (args.Length > 0)
+			if (args.Length >0)
 				listBox1.Items.AddRange(args);
 
 			lblFileSize.Text = String.Empty;
@@ -63,7 +64,7 @@ namespace PdfPageSaver
 			Size = Settings.Default.Size;
 			txtPageNumbers.Text = Settings.Default.PageNumbers;
 			txtSuffix.Text = Settings.Default.Suffix;
-			lblNumPages.Top = listBox1.Bottom + 3;
+			lblNumPages.Top = listBox1.Bottom +3;
 			rdoOverwrite.Checked = Settings.Default.IsOverwrite;
 		}
 
@@ -95,7 +96,7 @@ namespace PdfPageSaver
 		private void ListBox1_DragEnter(object sender, DragEventArgs e)
 		{
 			// Make sure they're actually dropping files (not text or anything else)
-			if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+			if (e.Data!.GetDataPresent(DataFormats.FileDrop, false))
 				// Allow them to continue (without this, the cursor stays a "NO" symbol
 				e.Effect = DragDropEffects.All;
 		}
@@ -110,7 +111,8 @@ namespace PdfPageSaver
 		private void ListBox1_DragDrop(object sender, DragEventArgs e)
 		{
 			// Transfer the file names to a string array
-			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+			if (e.Data == null) return;
+			var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 			AddFilesToListbox(files);
 		}
 
@@ -118,15 +120,15 @@ namespace PdfPageSaver
 		{
 			// Loop through the string array, adding each filename to the ListBox.
 			_skipSelectedIndex = true;
-			for (int i = 0; i < files.Count; i++)
+			for (var i =0; i < files.Count; i++)
 			{
 				string file = files[i];
 
-				if (String.Compare(Path.GetExtension(file), ".pdf", StringComparison.InvariantCultureIgnoreCase) != 0)
+				if (String.Compare(Path.GetExtension(file), ".pdf", StringComparison.OrdinalIgnoreCase) !=0)
 					continue;
 				if (!listBox1.Items.Contains(file))
 					listBox1.Items.Add(file);
-				if (i != files.Count - 1)
+				if (i != files.Count -1)
 					continue;
 				_skipSelectedIndex = false;
 				listBox1.Refresh();
@@ -174,9 +176,9 @@ namespace PdfPageSaver
 
 		private void CtxMenu1_Opening(object sender, CancelEventArgs e)
 		{
-			ctxMenuRemove.Enabled = ctxMenuOpen.Enabled = ctxMenuSaveSelected.Enabled = ctxMenuProperties.Enabled = listBox1.SelectedIndex >= 0;
-			ctxMenuRemoveAll.Enabled = ctxMenuSave.Enabled = listBox1.Items.Count > 0;
-			ctxMenuRemoveAllButSelected.Enabled = listBox1.Items.Count > 1;
+			ctxMenuRemove.Enabled = ctxMenuOpen.Enabled = ctxMenuSaveSelected.Enabled = ctxMenuProperties.Enabled = listBox1.SelectedIndex >=0;
+			ctxMenuRemoveAll.Enabled = ctxMenuSave.Enabled = listBox1.Items.Count >0;
+			ctxMenuRemoveAllButSelected.Enabled = listBox1.Items.Count >1;
 		}
 
 		private void CtxMenuOpen_Click(object sender, EventArgs e)
@@ -213,7 +215,7 @@ namespace PdfPageSaver
 		{
 			if (listBox1.SelectedIndex == -1)
 				return;
-			string filename = listBox1.Items[listBox1.SelectedIndex].ToString();
+			var filename = listBox1.Items[listBox1.SelectedIndex].ToString();
 			FileProperties.Show(filename);
 		}
 
@@ -245,7 +247,7 @@ namespace PdfPageSaver
 
 		private void LblNumPages_Move(object sender, EventArgs e)
 		{
-			lblNumPages.Top = listBox1.Bottom + 3;
+			lblNumPages.Top = listBox1.Bottom +3;
 		}
 
 		#endregion
@@ -263,21 +265,18 @@ namespace PdfPageSaver
 		{
 			if (listBox1.SelectedIndex == -1)
 				return;
-			string filename = listBox1.Items[listBox1.SelectedIndex].ToString();
+			var filename = listBox1.Items[listBox1.SelectedIndex].ToString();
 			if (filename == null)
 				return;
 			try
 			{
-				Process p = new()
+				var psi = new ProcessStartInfo
 				{
-					StartInfo = new ProcessStartInfo
-					{
-						FileName = filename,
-						CreateNoWindow = false,
-						UseShellExecute = true
-					}
+					FileName = filename,
+					CreateNoWindow = false,
+					UseShellExecute = true
 				};
-				p.Start();
+				Process.Start(psi);
 			}
 			catch (Exception ex)
 			{
@@ -323,8 +322,13 @@ namespace PdfPageSaver
 		{
 			object tmp = listBox1.SelectedItem;
 			listBox1.Items.Clear();
-			listBox1.Items.Add(tmp);
-			listBox1.SelectedItem = tmp;
+
+			if (tmp != null)
+			{
+				listBox1.Items.Add(tmp);
+				listBox1.SelectedItem = tmp;
+			}
+
 			UpdateForm();
 		}
 
@@ -351,16 +355,16 @@ namespace PdfPageSaver
 			if (!rdoAddSuffix.Checked)
 			{
 				if (MessageBox.Show(this,
-						$@"Sure you want to overwrite the {(isSelectedOnly ? "selected PDF file" : $"{(listBox1.Items.Count > 1 ? $"{listBox1.Items.Count} PDF files" : "PDF file")}")}?", Text,
+						$@"Sure you want to overwrite the {(isSelectedOnly ? "selected PDF file" : $"{(listBox1.Items.Count >1 ? $"{listBox1.Items.Count} PDF files" : "PDF file")}")}?", Text,
 						MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
 					return;
 			}
 			Cursor = Cursors.WaitCursor;
 			try
 			{
-				int invalidFileCnt = 0;
-				int max = listBox1.Items.Count - 1;
-				int min = 0;
+				var invalidFileCnt =0;
+				int max = listBox1.Items.Count -1;
+				var min =0;
 				if (isSelectedOnly)
 				{
 					max = listBox1.SelectedIndex;
@@ -368,7 +372,7 @@ namespace PdfPageSaver
 				}
 				for (int i = max; i >= min; i--)
 				{
-					string pdfFile = listBox1.Items[i].ToString();
+					var pdfFile = listBox1.Items[i].ToString();
 					try
 					{
 						listBox1.SelectedItem = pdfFile;
@@ -383,9 +387,9 @@ namespace PdfPageSaver
 				}
 				switch (invalidFileCnt)
 				{
-					case > 1:
+					case >1:
 						throw new InvalidOperationException($"{invalidFileCnt} PDF files were not saved because they wouldn't have any pages.");
-					case > 0:
+					case >0:
 						throw new InvalidOperationException("The PDF file was not saved because it wouldn't have any pages.");
 				}
 			}
@@ -401,14 +405,14 @@ namespace PdfPageSaver
 
 		private void UpdateForm()
 		{
-			btnSave.Enabled = btnRemoveAll.Enabled = listBox1.Items.Count > 0;
+			btnSave.Enabled = btnRemoveAll.Enabled = listBox1.Items.Count >0;
 			lblFileSize.Text = String.Empty;
 			lblNumPages.Text = String.Empty;
 
 			if (listBox1.SelectedIndex == -1)
 				return;
 
-			string filename = listBox1.Items[listBox1.SelectedIndex].ToString();
+			var filename = listBox1.Items[listBox1.SelectedIndex].ToString();
 			if (String.IsNullOrEmpty(filename))
 				return;
 
@@ -456,10 +460,8 @@ namespace PdfPageSaver
 				return;
 
 			string filename = Path.GetFileNameWithoutExtension(inputFilename);
-			if (filename == null)
-				return;
 
-			string outputFilename = $"{Path.Combine(Path.GetDirectoryName(inputFilename) ?? String.Empty, filename)}{suffix}.pdf";
+			var outputFilename = $"{Path.Combine(Path.GetDirectoryName(inputFilename) ?? String.Empty, filename)}{suffix}.pdf";
 
 			if (File.Exists(outputFilename))
 			{
@@ -472,43 +474,32 @@ namespace PdfPageSaver
 			// Open the file
 			using PdfDocument inputDocument = PdfReader.Open(inputFilename, PdfDocumentOpenMode.Import);
 			// Create a new pdf document in memory using parts of the original document.
-			var outputDocument = new PdfDocument
-			{
-				Info =
-				{
-					Author = inputDocument.Info.Author,
-					Creator = inputDocument.Info.Creator,
-					Keywords = inputDocument.Info.Keywords,
-					Subject = inputDocument.Info.Subject,
-					Title = inputDocument.Info.Title
-				},
-				Options =
-				{
-					NoCompression = inputDocument.Options.NoCompression,
-					CompressContentStreams = inputDocument.Options.CompressContentStreams
-				},
-				PageLayout = inputDocument.PageLayout,
-				//PageMode = inputDocument.PageMode,
-				Version = inputDocument.Version,
-				ViewerPreferences =
-				{
-					CenterWindow = inputDocument.ViewerPreferences.CenterWindow,
-					DisplayDocTitle = inputDocument.ViewerPreferences.DisplayDocTitle,
-					FitWindow = inputDocument.ViewerPreferences.FitWindow,
-					HideMenubar = inputDocument.ViewerPreferences.HideMenubar,
-					HideToolbar = inputDocument.ViewerPreferences.HideToolbar
-				}
-			};
+			using PdfDocument outputDocument = new();
+
+			outputDocument.Info.Author = inputDocument.Info.Author;
+			outputDocument.Info.Creator = inputDocument.Info.Creator;
+			outputDocument.Info.Keywords = inputDocument.Info.Keywords;
+			outputDocument.Info.Subject = inputDocument.Info.Subject;
+			outputDocument.Info.Title = inputDocument.Info.Title;
+			outputDocument.Options.NoCompression = inputDocument.Options.NoCompression;
+			outputDocument.Options.CompressContentStreams = inputDocument.Options.CompressContentStreams;
+			outputDocument.PageLayout = inputDocument.PageLayout; //PageMode = inputDocument.PageMode,
+			outputDocument.Version = inputDocument.Version;
+			outputDocument.ViewerPreferences.CenterWindow = inputDocument.ViewerPreferences.CenterWindow;
+			outputDocument.ViewerPreferences.DisplayDocTitle = inputDocument.ViewerPreferences.DisplayDocTitle;
+			outputDocument.ViewerPreferences.FitWindow = inputDocument.ViewerPreferences.FitWindow;
+			outputDocument.ViewerPreferences.HideMenubar = inputDocument.ViewerPreferences.HideMenubar;
+			outputDocument.ViewerPreferences.HideToolbar = inputDocument.ViewerPreferences.HideToolbar;
 
 			// Add the pages specified by the user to the new pdf document.
-			for (int idx = 0; idx < inputDocument.PageCount; idx++)
+			for (var idx =0; idx < inputDocument.PageCount; idx++)
 			{
-				if ((idx + 1).ToString().In(pageNumArray))
+				if ((idx +1).ToString().In(pageNumArray))
 					outputDocument.AddPage(inputDocument.Pages[idx]);
 			}
 
-			if (outputDocument.PageCount == 0)
-				throw new InvalidOperationException($@"""{Path.GetFileName(outputFilename)}"" was not saved because it would have zero pages.");
+			if (outputDocument.PageCount ==0)
+				throw new InvalidOperationException($"\"{Path.GetFileName(outputFilename)}\" was not saved because it would have zero pages.");
 
 			// Save the document to disk.
 			outputDocument.Save(outputFilename);
@@ -529,22 +520,22 @@ namespace PdfPageSaver
 		{
 			pageNumbers = pageNumbers.Trim(' ', ',', ';', '-');
 			MatchCollection mc = Regex.Matches(pageNumbers, @"([0-9]+)[ ]*\-[ ]*([0-9]+)", RegexOptions.Singleline);
-			if (mc.Count > 0)
+			if (mc.Count >0)
 			{
-				for (int index = mc.Count - 1; index >= 0; index--)
+				for (int index = mc.Count -1; index >=0; index--)
 				{
 					Match m = mc[index];
-					string newPageNumbers = String.Empty;
-					int beg = Int32.Parse(m.Groups[1].Value);
-					int end = Int32.Parse(m.Groups[2].Value);
+					var newPageNumbers = String.Empty;
+					int beg = Int32.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture);
+					int end = Int32.Parse(m.Groups[2].Value, CultureInfo.InvariantCulture);
 					for (int i = beg; i <= end; i++)
 						newPageNumbers += i + ",";
 					pageNumbers = pageNumbers[..m.Index] + newPageNumbers + pageNumbers[(m.Index + m.Length)..];
 				}
 			}
 			string[] pageNumArray = null;
-			if (pageNumbers.Length > 0)
-				pageNumArray = pageNumbers.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+			if (pageNumbers.Length >0)
+				pageNumArray = pageNumbers.Split([' ', ',', ';'], StringSplitOptions.RemoveEmptyEntries);
 			return pageNumArray;
 		}
 
@@ -558,42 +549,36 @@ namespace PdfPageSaver
 		private static string GetFileSizeInfo(double len)
 		{
 			double origLen = len;
-			// Beat it down a bit until it's a number smaller than 1024
-			byte type = 0;
-			while (len > 1024)
+			// Beat it down a bit until it's a number smaller than1024
+			byte type =0;
+			while (len >1024)
 			{
-				len /= 1024;
+				len /=1024;
 				type++;
 			}
 
 			// Change the descriptive name based on how many times we divided
-			string units;
-			switch (type)
+			string units = type switch
 			{
-				case 0:
-					units = " bytes";
-					break;
-				case 1:
-					units = " KB";
-					break;
-				case 2:
-					units = " MB";
-					break;
-				case 3:
-					units = " GB";
-					break;
-				default: // what is this? Just make it bytes...
-					len = origLen;
-					units = " bytes";
-					break;
+				0 => " bytes",
+				1 => " KB",
+				2 => " MB",
+				3 => " GB",
+				_ => " bytes"
+			};
+			if (type >3)
+			{
+				// what is this? Just make it bytes...
+				len = origLen;
 			}
 
-			// Cut off 00 from the end of it
-			string size = len.ToString("F");
-			if (size.EndsWith(".00"))
-				size = size.Remove(size.Length - 3, 3);
+			// Cut off00 from the end of it
+			var size = len.ToString("F", CultureInfo.CurrentCulture);
+			if (size.EndsWith(".00", StringComparison.Ordinal))
+				size = size.Remove(size.Length -3,3);
 
-			return $"{size}{units} ({origLen:N0} bytes)";
+			var bytes = origLen.ToString("N0", CultureInfo.CurrentCulture);
+			return $"{size}{units} ({bytes} bytes)";
 		}
 
 		#endregion
@@ -607,7 +592,7 @@ namespace PdfPageSaver
 	{
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Returns an indication as to whether this object exists in the specified enumerable collection.
+		/// Returns an indication whether this object exists in the specified enumerable collection.
 		/// </summary>
 		/// <param name="obj">What to look for in the collection.</param>
 		/// <param name="col">Collection to iterate over.</param>

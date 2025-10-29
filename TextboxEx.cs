@@ -4,12 +4,16 @@ using System.Windows.Forms;
 
 namespace PdfPageSaver
 {
+	//--------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// A TextBox that only allows certain characters to be entered.
+	/// </summary>
+	//--------------------------------------------------------------------------------------------------------------------------
 	internal class TextBoxEx : TextBox
 	{
-
-		private readonly char[] _validChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ',', ';' };
-		private readonly int[] _validKeyValues = { 8, 16, 17, 18, 32, 33, 34, 35, 36, 37, 38, 39, 40, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 186, 188, 189 };
-		private readonly int[] _validShiftKeyValues = { 16, 35, 36, 37, 38, 39, 40 };
+		private readonly char[] _validChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ',', ';'];
+		private readonly int[] _validKeyValues = [8, 16, 17, 18, 32, 33, 34, 35, 36, 37, 38, 39, 40, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 186, 188, 189];
+		private readonly int[] _validShiftKeyValues = [16, 35, 36, 37, 38, 39, 40];
 
 		//private const int WM_CUT = 0x0300;
 		//private const int WM_COPY = 0x0301;
@@ -28,7 +32,7 @@ namespace PdfPageSaver
 			base.OnKeyDown(e);
 		}
 
-		protected override void WndProc(ref Message m) // 1-2;a;3-4;
+		protected override void WndProc(ref Message m)
 		{
 			if (m.Msg == WM_PASTE)
 			{
