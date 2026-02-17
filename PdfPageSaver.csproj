@@ -55,6 +55,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Update="TextBoxEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,6 +82,12 @@
     <Content Include="Images\image3.png" />
     <Content Include="Images\image4.png" />
     <Content Include="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>::call "Postbuild.bat" "" "D:\Users\Ronn\Documents\Visual Studio 2019\DevTools\PdfPageSaver\" "" "" ""</PostBuildEvent>
